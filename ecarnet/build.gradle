@@ -1,0 +1,54 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '25.0.0'
+
+//    publishNonDefault true
+//    defaultPublishConfig "ecarbeesRelease"
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile('com.squareup.retrofit2:retrofit:2.1.0') {
+        exclude group: "com.google", module: "gson"
+    }
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile('com.github.goEcar:RxbusKim:1.0.7') {
+        exclude group: "io.reactivex", module: "rxjava"
+    }
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    compile 'com.github.goEcar:EcarEncryption:1.2.8'
+
+}
+
+//dependencies {
+//    compile fileTree(include: ['*.jar'], dir: 'libs')
+//    compile'io.reactivex.rxjava2:rxjava:2.1.1'
+//    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+//
+//    compile('com.squareup.retrofit2:retrofit:2.1.0') {
+//        exclude group: "com.google", module: "gson"
+//    }
+//    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+//    compile 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
+////    compile('com.github.goEcar:RxbusKim:1.0.7') {
+////        exclude group: "io.reactivex", module: "rxjava"
+////    }
+//    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+//    compile 'com.github.goEcar:EcarEncryption:1.2.8'
+//
+//}
