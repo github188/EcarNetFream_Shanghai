@@ -71,7 +71,7 @@ public class LoginPresenter extends LoginContract.Presenter {
         ApiService apiService = ApiBox.getInstance().createService(ApiService.class, "http://10.50.50.8:8999/");
         String temp = "{\"code\":\"P011\",\"commRequest\": {\"clientId\":\"001\",\"tsn\":\"1234567890\",\"sim\":\"1234567890\",\"pasm\":\"1234567890\",\"sysVer\":\"wince5\",\"appVer\":\"pm1.0\"},\"uid\":\"010001\",\"pwd\":\"123456\",\"longi\":\"123.4567\",\"lati\":\"23.4567\",\"batchcode\":\"2011080101000101\",\"name\":\"华宁国际停车场\",\"address\":\"宣化路300号\",\"opentime\":\"24小时\",\"price\":\"10元每小时\"}";
 //        String s = new Gson().toJson(map);
-//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),s);
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), s);
 //        apiService.getResult(map)
 //        apiService.getResult3("345",temp)
         ResLoginRequest loginReq = new ResLoginRequest();
