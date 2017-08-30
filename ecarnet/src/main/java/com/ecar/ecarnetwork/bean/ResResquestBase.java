@@ -71,17 +71,17 @@ public class ResResquestBase implements Serializable {
         //从低位开始取
         String lenStr = "";
         for(int i=0;i<4;i++){
-            lenStr += Integer.toHexString(lenInt%256);//取余 求16进制。若int型数据太大采用new BigInteger(str,16).toString();
+            //取余 求16进制。若int型数据太大采用new BigInteger(str,16).toString();
+            lenStr += Integer.toHexString(lenInt%256);
+            //取下一个字节
             lenInt = lenInt/256;
         }
         return lenStr;
     }
 
-
     /**
      * 获取10进制 长度
      * 2.某个例子看到的内容：commLen=394&zipFlag=0&jsonContent=
-     * @return
      */
     private String getLen2(String content){
         return String.valueOf(getLenInt(content));
@@ -90,7 +90,6 @@ public class ResResquestBase implements Serializable {
     /**
      * 获取10进制 长度 int型
      * @param content
-     * @return
      */
     private int getLenInt(String content){
         int result = 0;
