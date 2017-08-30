@@ -20,8 +20,8 @@
             android:id="@+id/progress_wheel"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_centerHorizontal="true"
             oneall:matProg_barColor="@color/gray0"
+            oneall:matProg_rimColor="#ff00ff"
             oneall:matProg_progressIndeterminate="true" />
 
         <TextView
