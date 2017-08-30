@@ -40,8 +40,8 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
     public void onNext(T t) {
         if(t instanceof ResResponseBase){
             ResResponseBase base = (ResResponseBase)t;
-            if (base.state != 1) {//非成功
-                this.onUserError(new CommonException(new UserException(base.code,base.msg,base)));
+            if (base.commResponse ==null || !"1".equals(base.commResponse.result)) {//非成功
+                this.onUserError(new CommonException(new UserException(base.code,base.getMsg(),base)));
             }else {//if(base.state == 1)
                 this.onUserSuccess(t);
             }

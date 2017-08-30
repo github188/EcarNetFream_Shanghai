@@ -45,6 +45,7 @@ import rx.Observable;
  * ===============================================
  */
 public interface ApiService {
+    String zipFlag = "0";
     /**
      * 获取登录的信息
      */
@@ -63,7 +64,7 @@ public interface ApiService {
     Observable<ResResponseBase> getResult2(@Body RequestBody requestBody);
 
     @FormUrlEncoded
-    @POST("?zipFlag=0")
+    @POST("?zipFlag="+zipFlag)
     Observable<ResResponseBase> getResult3(@Query("commLen") String commLen, @Field(value = "jsonContent",encoded = true)  String content);
 }
 

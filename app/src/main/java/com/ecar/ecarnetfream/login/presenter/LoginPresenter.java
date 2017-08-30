@@ -6,12 +6,14 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.ecar.ecarnetfream.login.entity.ResLogin;
+import com.ecar.ecarnetfream.login.entity.ResLoginRequest;
 import com.ecar.ecarnetfream.login.interfaces.LoginContract;
 import com.ecar.ecarnetfream.publics.network.Datacenter;
 import com.ecar.ecarnetfream.publics.network.api.ApiService;
 import com.ecar.ecarnetfream.publics.util.TagUtil;
 import com.ecar.ecarnetwork.base.BaseSubscriber;
 import com.ecar.ecarnetwork.bean.ResResponseBase;
+import com.ecar.ecarnetwork.bean.ResRequestComm;
 import com.ecar.ecarnetwork.http.api.ApiBox;
 import com.ecar.ecarnetwork.http.exception.CommonException;
 import com.ecar.ecarnetwork.http.exception.InvalidException;
@@ -66,38 +68,73 @@ public class LoginPresenter extends LoginContract.Presenter {
     }
 
     private void test() {
-        ApiService apiService = ApiBox.getInstance().createService(ApiService.class,"http://10.50.50.8:8999/");
+        ApiService apiService = ApiBox.getInstance().createService(ApiService.class, "http://10.50.50.8:8999/");
+        String temp = "{\"code\":\"P011\",\"commRequest\": {\"clientId\":\"001\",\"tsn\":\"1234567890\",\"sim\":\"1234567890\",\"pasm\":\"1234567890\",\"sysVer\":\"wince5\",\"appVer\":\"pm1.0\"},\"uid\":\"010001\",\"pwd\":\"123456\",\"longi\":\"123.4567\",\"lati\":\"23.4567\",\"batchcode\":\"2011080101000101\",\"name\":\"华宁国际停车场\",\"address\":\"宣化路300号\",\"opentime\":\"24小时\",\"price\":\"10元每小时\"}";
+//        String s = new Gson().toJson(map);
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),s);
+//        apiService.getResult(map)
+//        apiService.getResult3("345",temp)
+        ResLoginRequest loginReq = new ResLoginRequest();
+        loginReq.code = "01";//业务编号
+        loginReq.uid = "015001";
+        loginReq.pwd = "015001";
+        loginReq.longi = "116.314806";
+        loginReq.lati = "39.884797";
+        loginReq.batchCode = "2017082101500101";//批次号由 POS 生成：日期+工号+2 位序号
+        ResRequestComm reqComm = new ResRequestComm();
+        reqComm.clientId = "001";
+        reqComm.tsn = "1234567890";
+        reqComm.sim = "1234567890";
+        reqComm.psam = "1234567890";
+        reqComm.sysVer = "wince5";
+        reqComm.appVer = "pm1.0";
+        loginReq.commRequest = reqComm;
+
+        String contentJson = loginReq.getContentJson();
+        String contentLen = loginReq.getContentLen(contentJson);//内部两个选择。看具体要求:目前文档有两种格式
+        String compressFlag = loginReq.getCompressFlag();//这个标志目前已写死
+        apiService.getResult3(contentLen,contentJson)
+                .compose(RxUtils.getScheduler(true, view)).subscribe(new BaseSubscriber<ResResponseBase>(context, view) {
+            @Override
+            protected void onUserSuccess(ResResponseBase resBase) {
+
+            }
+        });
+    }
+
+    private void test2() {
+        ApiService apiService = ApiBox.getInstance().createService(ApiService.class, "http://10.50.50.8:8999/");
         String temp = "{\"code\":\"P011\",\"commRequest\": {\"clientId\":\"001\",\"tsn\":\"1234567890\",\"sim\":\"1234567890\",\"pasm\":\"1234567890\",\"sysVer\":\"wince5\",\"appVer\":\"pm1.0\"},\"uid\":\"010001\",\"pwd\":\"123456\",\"longi\":\"123.4567\",\"lati\":\"23.4567\",\"batchcode\":\"2011080101000101\",\"name\":\"华宁国际停车场\",\"address\":\"宣化路300号\",\"opentime\":\"24小时\",\"price\":\"10元每小时\"}";
 //        temp = "commLen=345&zipFlag=0&jsonContent={\"code\":\"P011\",\"commRequest\": {\"clientId\":\"001\",\"tsn\":\"1234567890\",\"sim\":\"1234567890\",\"pasm\":\"1234567890\",\"sysVer\":\"wince5\",\"appVer\":\"pm1.0\"},\"uid\":\"010001\",\"pwd\":\"123456\",\"longi\":\"123.4567\",\"lati\":\"23.4567\",\"batchcode\":\"2011080101000101\",\"name\":\"华宁国际停车场\",\"address\":\"宣化路300号\",\"opentime\":\"24小时\",\"price\":\"10元每小时\"}";
         TagLibUtil.showLogDebug(temp);
         int length = temp.getBytes().length;
         int l1 = temp.length();
-        Map<String,Object> map = new HashMap();
-        map.put("code","01");
-        map.put("uid","015001");
-        map.put("pwd","015001");
-        map.put("longi","116.314806");
-        map.put("lati","39.884797");
-        map.put("batchCode","2017082101500101");
-        Map<String,String > map2 = new HashMap();
-        map2.put("clientId","001");
-        map2.put("tsn","1234567890");
-        map2.put("sim","1234567890");
-        map2.put("psam","1234567890");
-        map2.put("sysVer","wince5");
-        map2.put("appVer","pm1.0");
-        map.put("commRequest",new Gson().toJson(map2));//test
+        Map<String, Object> map = new HashMap();
+        map.put("code", "01");
+        map.put("uid", "015001");
+        map.put("pwd", "015001");
+        map.put("longi", "116.314806");
+        map.put("lati", "39.884797");
+        map.put("batchCode", "2017082101500101");
+        Map<String, String> map2 = new HashMap();
+        map2.put("clientId", "001");
+        map2.put("tsn", "1234567890");
+        map2.put("sim", "1234567890");
+        map2.put("psam", "1234567890");
+        map2.put("sysVer", "wince5");
+        map2.put("appVer", "pm1.0");
+        map.put("commRequest", new Gson().toJson(map2));//test
 
         String s = new Gson().toJson(map);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),s);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), s);
 
         int i = 0x400;
         int j = 400;
-        BigInteger h = new BigInteger("00000400",16);
+        BigInteger h = new BigInteger("00000400", 16);
         String s1 = h.toString();
-//        apiService.getResult(map)
-                apiService.getResult3("345",temp)
-        .compose(RxUtils.getScheduler(true, view)).subscribe(new BaseSubscriber<ResResponseBase>(context,view) {
+//        apiService.getResult(map)//方式1
+        apiService.getResult3("345", temp)//方式2
+                .compose(RxUtils.getScheduler(true, view)).subscribe(new BaseSubscriber<ResResponseBase>(context, view) {
             @Override
             protected void onUserSuccess(ResResponseBase resBase) {
 
@@ -114,7 +151,7 @@ public class LoginPresenter extends LoginContract.Presenter {
 
             @Override
             protected void onUserSuccess(ResResponseBase resBase) {
-                view.showMsg("单个请求" + resBase.msg);
+                view.showMsg("单个请求" + resBase.getMsg());
             }
 
             /**
@@ -138,23 +175,21 @@ public class LoginPresenter extends LoginContract.Presenter {
 ////                }catch (Exception e){
 //                    ex.printStackTrace();
             }
-    }
+        };
 
-    ;
-
-    //一个请求（登录）
-    Subscription subscribe = Datacenter.get().login(name, pwd).compose(RxUtils.getScheduler(true, view)).subscribe(subscriber);
+        //一个请求（登录）
+        Subscription subscribe = Datacenter.get().login(name, pwd).compose(RxUtils.getScheduler(true, view)).subscribe(subscriber);
         rxManage.add(subscribe);//添加到订阅集合中
 
 
-}
+    }
 
     private void rxLogin3(String name, String pwd) {
         //1.订阅者 泛型：最终想要获取的数据类型
         BaseSubscriber<ResResponseBase> subscriber = new BaseSubscriber<ResResponseBase>(context, view) {
             @Override
             protected void onUserSuccess(ResResponseBase resBase) {
-                view.showMsg(resBase.msg);
+                view.showMsg(resBase.code);
             }
         };
 
@@ -167,7 +202,7 @@ public class LoginPresenter extends LoginContract.Presenter {
                 /**
                  * 此处会出错，还在子线程中. 执行前需要先指定观察的线程位置,即login(xx,xx)后面的observeOn
                  */
-                view.showMsg("链式请求第一个响应" + resLogin.msg);
+                view.showMsg("链式请求第一个响应" + resLogin.getMsg());
 //                view.loginSuccess(resLogin);//使用 当前获得的数据。区别于map 改变数据的操作
             }
         }).flatMap(new Func1<ResLogin, Observable<ResResponseBase>>() {

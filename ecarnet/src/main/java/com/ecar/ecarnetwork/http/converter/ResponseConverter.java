@@ -63,20 +63,15 @@ public class ResponseConverter<T> implements Converter<ResponseBody, T> {
         Log.i("thread",Thread.currentThread().getName()) ;
         try {
             base = gson.fromJson(response, type);
-            if (base != null&& !InvalidUtil.checkSign(base.sign, response) && ConstantsLib.VeriNgis) {//校验错误
-                throw new InvalidException(InvalidException.FLAG_ERROR_RESPONCE_CHECK,base.msg,base);
-            }
-
             /**
              * 保存utv
              */
             saveUTV(base);
-            if (base != null && base.state != 1) {//非成功
-                if (base != null && base.state == 0 && !TextUtils.isEmpty(base.msg) &&
-                        (!TextUtils.isEmpty(base.msg) && base.msg.contains("0x04") || !TextUtils.isEmpty(base.msg) && base.msg.contains("0x02"))) {
-                    TagLibUtil.showLogDebug("系统级错误 message出现");
+            if (base != null && base.commResponse!=null) {//非成功
+                if ("5".equals(base.commResponse.result)) {//终端被别的用户登录
+                    TagLibUtil.showLogDebug("终端被别的用户登录");
                     //重新登录
-                    throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN,base.msg,base);
+                    throw new InvalidException(InvalidException.FLAG_ERROR_RELOGIN,base.getMsg(),base);
                 } else {//失败 -- 订阅者 自己在onNext做处理逻辑
 //                    if(base==null&&!TextUtils.isEmpty(response)){
 //                        base.jsonStr=response;
